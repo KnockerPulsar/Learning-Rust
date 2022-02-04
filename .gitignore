@@ -3,3 +3,4 @@ pong/target
 amethyst/
 *.swp
 ref
+!*.*
