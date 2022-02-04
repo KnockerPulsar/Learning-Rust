@@ -4,3 +4,8 @@ amethyst/
 *.swp
 ref
 !*.*
+
+
+# Added by cargo
+
+/target
