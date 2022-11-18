@@ -10,13 +10,19 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn build(args: &[String]) -> Result<Self, &str> {
-        if args.len() < 3 {
-            return Err("Not enough arguments");
-        }
+    pub fn build(mut args: impl Iterator<Item = String>) -> Result<Self, &'static str> {
+        // Skip the program's name
+        args.next();
 
-        let query = args[1].clone();
-        let file_path = args[2].clone();
+        let query = match args.next() {
+            Some(q) => q,
+            None => return Err("Didn't get a query string")
+        };
+
+        let file_path = match args.next() {
+            Some(p) => p,
+            None => return Err("Didn't get a file path")
+        };
 
         // If we want to use a command line argument too,
         // we can check args[3]
@@ -45,27 +51,19 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn search<'a>(query: &'a str, contents: &'a str) -> Vec<&'a str> {
-    let mut matches = vec![];
-    for line in contents.lines() {
-        if line.contains(query) {
-            matches.push(line);
-        }
-    }
-
-    matches
+   contents
+       .lines()
+       .filter(|line| line.contains(query))
+       .collect()
 }
 
 pub fn search_case_insensitive<'a>(query: &'a str, contents: &'a str) -> Vec<&'a str> {
-    let mut matches = vec![];
     let query = query.to_lowercase();
-
-    for line in contents.lines() {
-        if line.to_lowercase().contains(&query) {
-            matches.push(line);
-        }
-    }
-
-    matches
+    
+    contents
+        .lines()
+        .filter(|line| line.to_lowercase().contains(&query))
+        .collect()
 }
 
 #[cfg(test)]
