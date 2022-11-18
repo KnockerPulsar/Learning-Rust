@@ -42,7 +42,11 @@ pub fn test_commands() {
 }
 
 fn print_dep_sorted(company: &HashMap<String, HashSet<String>>, dep_name: &String) {
-    let dep_set = company.get(dep_name).unwrap();
+    let dep_set = company
+        .get(dep_name)
+        .or_else(|| println!("Department not found"))
+        .unwrap();
+
     let mut department_vec: Vec<&String> = dep_set.iter().collect();
     department_vec.sort();
     println!("{} : {:#?}", dep_name, department_vec);

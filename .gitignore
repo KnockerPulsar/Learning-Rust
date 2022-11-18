@@ -1,11 +1,5 @@
 
-pong/target
 amethyst/
 *.swp
 ref
-!*.*
-
-
-# Added by cargo
-
-/target
+**/target
